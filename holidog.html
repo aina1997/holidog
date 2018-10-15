@@ -1,28 +1,44 @@
 <!DOCTYPE html>
 <html>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
 <head>
   <title> Holidog </title>
   <link rel="stylesheet" type="text/css" href="holidog.css">
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
   <header >
       <div class="overlay">
           <img style="width:50%;height:50%;" src="95514p.png">
   </header>
-  <div ng-app="myApp" ng-controller="myCtrl">
-    <h2>Choose a breed</h2>
+  <div ng-app="myApp" ng-controller="myCtrl" ng-init="foto='foto.png'">
+    <h2 style="text-align: center;">Choose a breed</h2>
+    <div class="row">
+      <div class="col-sm-6">
+        <img width="100%" ng-src={{foto}}>
+      </div>
+      <div class="col-sm-6" style="height:400px;width:40%;overflow:auto;padding:2%">
+        <div ng-repeat="(key, data) in message">
+          <div *ngif="data; else other_content">
+            <p ng-repeat="d in data">{{key | capitalize}} {{d}}</p>
+          </div>
+          <ng-template #other_content><p>{{key | capitalize}}</p></ng-template>
+        </div>
+      </div>
+  </div>
 
-    <p ng-repeat="(key, data) in message">
-      {{key}}
-    </p>
 
   </div>
 
 
   <script>
   var app = angular.module('myApp', []);
+  var app = angular.module("myApp", ['ngSanitize']);
   app.controller('myCtrl', function($scope, $http) {
     $http.get("https://dog.ceo/api/breeds/list/all")
     .then(function(response) {
@@ -30,8 +46,11 @@
         $scope.message = response.data.message;
     });
   });
-
-
+  app.filter('capitalize', function() {
+    return function(input) {
+      return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+    }
+  });
 
   </script>
 </body>
