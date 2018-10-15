@@ -14,12 +14,9 @@
   <div ng-app="myApp" ng-controller="myCtrl">
     <h2>Choose a breed</h2>
 
-
-  <p>{{dog}}</p>
-  <ul>
-    <li ng-repeat="x,y in dog">{{x}}</li>
-  </ul>
-  <!--<p>{{breeds}}</p>-->
+    <p ng-repeat="(key, data) in message">
+      {{key}}
+    </p>
 
   </div>
 
@@ -29,10 +26,12 @@
   app.controller('myCtrl', function($scope, $http) {
     $http.get("https://dog.ceo/api/breeds/list/all")
     .then(function(response) {
-        var breeds = response.data.message;
-        $scope.dog = JSON.parse(breeds) ;
+        $scope.status = response.data.status;
+        $scope.message = response.data.message;
     });
   });
+
+
 
   </script>
 </body>
