@@ -32,6 +32,29 @@ h1 {
 
 h2{
   	font-size: 40px;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+#breeds{
+  height:400px;
+  width:40%;
+  overflow:auto;
+  padding:2%
+}
+
+#breed{
+  cursor: pointer;
+}
+
+#header_image{
+  width:50%;
+  height:50%;
+}
+
+#photo{
+  float: inline-end;
+  width:500px;
 }
 
 
