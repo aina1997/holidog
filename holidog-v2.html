@@ -22,17 +22,15 @@
       <div class="col-sm-6">
         <img id='photo' ng-src={{foto}}>
       </div>
-      <div class="col-sm-6" id="breeds">
-        <div ng-controller="myPhoto">
-          <div id='breed' ng-repeat="(key, data) in message">
-            <div *ngif="data; else other_content">
-              <p ng-repeat="d in data" ng-click="myFunction(key, d)">{{key | capitalize}} {{d}}</p>
-              <div ng-click="myFunction(key, 1)">
-                <ng-template #other_content><p>{{key | capitalize}}</p></ng-template>
+      <div class="col-sm-6">
+        <p><input type="text" ng-model="test"></p>
+        <div id="breeds">
+          <div ng-controller="myPhoto">
+              <div id='breed' ng-repeat='breed in breeds(message) | filter:test'>
+                <p ng-click="myFunction(breed)">{{breed | capitalize}}</p>
               </div>
-            </div>
+          </div>
         </div>
-      </div>
     </div>
   </div>
 </div>
@@ -46,16 +44,28 @@
     .then(function(response) {
         $scope.status = response.data.status;
         $scope.message = response.data.message;
+        $scope.breeds = function($m){
+          $aux = 0;
+          $br = [];
+          for ([$n1, $n2] of Object.entries($m)) {
+            if($n2.length > 0){
+              for ($name2 of $n2){
+                $br[$aux] = $n1 +" "+$name2;
+                $aux++;
+              }
+            }else{
+              $br[$aux] = $n1;
+              $aux++;
+            }
+          }
+          return $br;
+        }
     });
   });
   app.controller('myPhoto', function($scope, $http) {
-        $scope.myFunction = function($key, $data) {
-          if($data==1){
-            $dog = $key;
-          }else{
-            $dog = $key+"-"+$data;
-          }
-          console.log($dog);
+        $scope.myFunction = function($name) {
+        $dog = $name.replace(" ","-");
+        console.log($dog);
         $http.get("https://dog.ceo/api/breed/"+$dog+"/images/random")
         .then(function(response) {
             $scope.foto= response.data.message;
@@ -63,11 +73,13 @@
         });
       }
   });
+
   app.filter('capitalize', function() {
     return function(input) {
       return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
     }
   });
+
   </script>
 </body>
   <div class="footer">Holidog</div>
