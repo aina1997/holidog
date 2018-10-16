@@ -20,16 +20,25 @@
     <h2 style="text-align: center;">Choose a breed</h2>
     <div class="row">
       <div class="col-sm-6">
-        <img width="100%" ng-src={{foto}}>
+        <img width="100%" ng-src={{foto}} on-tap="onTap()">
       </div>
       <div class="col-sm-6" style="height:400px;width:40%;overflow:auto;padding:2%">
+        <div ng-controller="myPhoto">
+
         <div ng-repeat="(key, data) in message">
+
           <div *ngif="data; else other_content">
-            <p ng-repeat="d in data">{{key | capitalize}} {{d}}</p>
-          </div>
+
+            <p ng-repeat="d in data" ng-click="myFunction(key, d)">{{key | capitalize}} {{d}}</p>
+
+          <div ng-click="myFunction(key, 1)">
           <ng-template #other_content><p>{{key | capitalize}}</p></ng-template>
         </div>
+        </div>
       </div>
+    </div>
+      </div>
+
   </div>
 
 
@@ -44,8 +53,26 @@
     .then(function(response) {
         $scope.status = response.data.status;
         $scope.message = response.data.message;
+
     });
   });
+  app.controller('myPhoto', ['$scope',
+    function photo($scope) {
+        $scope.about = 'WE LOVE CODE';
+        $scope.myFunction = function($key, $data) {
+          if($data==1){
+            console.log($key);
+          }else{
+            console.log($key + " "+ $data);
+          }
+        }
+    }
+]);
+
+
+
+
+
   app.filter('capitalize', function() {
     return function(input) {
       return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
